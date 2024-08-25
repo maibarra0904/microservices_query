@@ -32,11 +32,24 @@ app.post('/events', (req, res) => {
     }
 
     if(type === "COMMENT_CREATED") {
-        const {commentId, comments, idPost, status} = data;
-        console.log(posts)
+        const {commentId, comments, idPost} = data;
         const currentPost = posts.filter(post => post.id === idPost)
 
-        currentPost[0].comments.push({id:commentId, content:comments, status})
+        currentPost[0].comments.push({id:commentId, content:comments, status:''})
+        console.log(posts)
+    }
+
+    if(type === "COMMENT_MODERATED") {
+        const {commentId, comments, idPost, status} = data;
+        posts.map(post => {
+            if(post.id === idPost) {
+                const updatedComment = post.comments.find(comment => comment.id === commentId)
+                if(updatedComment) {
+                    updatedComment.status = status;
+                }
+            }
+        })
+        
         console.log(posts)
     }
     
